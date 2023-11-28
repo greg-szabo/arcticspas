@@ -1,28 +1,16 @@
-# Developer notes
-#
-# Manually created files:
-# Makefile - this file. Use it to set up the developer environment and automatic API creation.
-# resources/openapi.cfg - Configuration for openapi-python-client.
-# resources/requirements.txt - python package requirements for openapi-python-client.
-#
-# Automatically created files:
-# arcticspas/* - the arcticspas python package.
-# resources/arctic-spas-openapi-*.json - the arcticspas OpenAPI definitions.
-#
-# Automatically created files that are then manually updated:
-# README.md - User documentation
-#
-
-STAMP?=$(shell date +%Y%m%d)
+# OpenAPI download datestamp
+STAMP ?= 20231126
 
 download-openapi-definition:
-	curl -s https://api.myarcticspa.com/docs/arctic-spas-openapi.json --output resources/arctic-spas-openapi-$(STAMP).json
+	curl -s https://api.myarcticspa.com/docs/arctic-spas-openapi.json --output resources/arctic-spas-openapi-$(shell date +%Y%m%d).json
 
 setup-devenv:
 	if [ ! -f venv/bin/activate ]; then python3 -m virtualenv venv ; source venv/bin/activate && pip3 install -r resources/requirements.txt ; fi
 
-create-library: setup-devenv
-	source venv/bin/activate && cd .. && openapi-python-client generate --path resources/arctic-spas-openapi-$(STAMP).json --config resources/openapi.cfg --fail-on-warning --meta setup
+update-package: setup-devenv
+	source venv/bin/activate && cd .. && openapi-python-client update --path arcticspas/resources/arctic-spas-openapi-$(STAMP).json --config arcticspas/resources/openapi.cfg --fail-on-warning --meta setup
 
-update-library: setup-devenv
-	source venv/bin/activate && cd .. && openapi-python-client update --path resources/arctic-spas-openapi-$(STAMP).json --config resources/openapi.cfg --fail-on-warning --meta setup
+lint:
+	source venv/bin/activate && autoflake -i -r --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports arcticspas tests
+	source venv/bin/activate && isort arcticspas tests
+	source venv/bin/activate && black arcticspas tests

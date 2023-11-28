@@ -2,4 +2,4 @@ openapi-python-client==0.15.2
 autoflake==2.2.1
 isort==5.12.0
 black==23.11.0
-
+tox==4.11.3

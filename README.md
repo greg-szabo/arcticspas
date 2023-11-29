@@ -1,5 +1,9 @@
 # arcticspas
-A client library for accessing Arctic Spas API
+A low-level python client library for accessing Arctic Spas API.
+Generated from [swagger](https://api.myarcticspa.com/docs/arctic-spas-openapi.json)
+using [openapi-python-client](https://pypi.org/project/openapi-python-client/).
+
+Note: for generic python use, please check the pyarcticspas library.
 
 ## Usage
 First, create a client:
@@ -7,47 +11,40 @@ First, create a client:
 ```python
 from arcticspas import Client
 
-client = Client(base_url="https://api.example.com")
-```
-
-If the endpoints you're going to hit require authentication, use `AuthenticatedClient` instead:
-
-```python
-from arcticspas import AuthenticatedClient
-
-client = AuthenticatedClient(base_url="https://api.example.com", token="SuperSecretToken")
+token = "(Token received from https://myarcticspa.com/spa/SpaAPIManagement.aspx)"
+client = Client(base_url="https://api.myarcticspa.com", headers={"X-API-KEY": token})
 ```
 
 Now call your endpoint and use your models:
 
 ```python
-from arcticspas.models import MyDataModel
-from arcticspas.api.my_tag import get_my_data_model
+from arcticspas.models import V2SpaResponse200
+from arcticspas.api.spa_control import v2_spa
 from arcticspas.types import Response
 
 with client as client:
-    my_data: MyDataModel = get_my_data_model.sync(client=client)
+    status: V2SpaResponse200 = v2_spa.sync(client=client)
     # or if you need more info (e.g. status_code)
-    response: Response[MyDataModel] = get_my_data_model.sync_detailed(client=client)
+    response: Response[V2SpaResponse200] = v2_spa.sync_detailed(client=client)
 ```
 
 Or do the same thing with an async version:
 
 ```python
-from arcticspas.models import MyDataModel
-from arcticspas.api.my_tag import get_my_data_model
+from arcticspas.models import V2SpaResponse200
+from arcticspas.api.spa_control import v2_spa
 from arcticspas.types import Response
 
 async with client as client:
-    my_data: MyDataModel = await get_my_data_model.asyncio(client=client)
-    response: Response[MyDataModel] = await get_my_data_model.asyncio_detailed(client=client)
+    status: V2SpaResponse200 = await v2_spa.asyncio(client=client)
+    response: Response[V2SpaResponse200] = await v2_spa.asyncio_detailed(client=client)
 ```
 
 By default, when you're calling an HTTPS API it will attempt to verify that SSL is working correctly. Using certificate verification is highly recommended most of the time, but sometimes you may need to authenticate to a server (especially an internal server) using a custom certificate bundle.
 
 ```python
 client = AuthenticatedClient(
-    base_url="https://internal_api.example.com", 
+    base_url="https://api.example.com", 
     token="SuperSecretToken",
     verify_ssl="/path/to/certificate_bundle.pem",
 )
@@ -57,7 +54,7 @@ You can also disable certificate validation altogether, but beware that **this i
 
 ```python
 client = AuthenticatedClient(
-    base_url="https://internal_api.example.com", 
+    base_url="https://api.example.com", 
     token="SuperSecretToken", 
     verify_ssl=False
 )

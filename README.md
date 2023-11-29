@@ -1,9 +1,9 @@
 # arcticspas
-A low-level python client library for accessing Arctic Spas API.
-Generated from [swagger](https://api.myarcticspa.com/docs/arctic-spas-openapi.json)
+A low-level client library for accessing Arctic Spas API.
+Generated from the [OpenAPI definition](https://api.myarcticspa.com/docs/arctic-spas-openapi.json)
 using [openapi-python-client](https://pypi.org/project/openapi-python-client/).
 
-Note: for generic python use, please check the pyarcticspas library.
+Note: for generic use, please consider the [pyarcticspas](https://pypi.org/project/pyarcticspas) library.
 
 ## Usage
 First, create a client:
